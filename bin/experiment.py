@@ -15,7 +15,7 @@ import logging
 from functools import partial
 logger = logging.getLogger(__name__)
 
-from src.data.data_chexnet_covid import get_chexnet_covid
+from src.data.data import make_data
 from src import models
 from src.training_loop import training_loop, evaluation_loop
 from src.callbacks import get_callback
@@ -36,7 +36,7 @@ def train(save_path,
           freeze_all_but_this_layer=None,
           mode='train'):
     # Create dynamically dataset generators
-    train, valid, test, meta_data = get_chexnet_covid(batch_size=batch_size)
+    train, valid, test, metadata = make_data(batch_size=batch_size)
 
     # Create dynamically model
     model = models.__dict__[model]()
@@ -92,7 +92,7 @@ def train(save_path,
         assert train is not None, "please provide train data"
         assert valid is not None, "please provide validation data"
         training_loop(model=model, optimizer=optimizer, scheduler=scheduler, loss_function=loss_function,
-                      metrics=[acc_chexnet_covid], train=train, valid=valid, test=test, meta_data=meta_data,
+                      metrics=[acc_chexnet_covid], train=train, valid=valid, test=test, meta_data=metadata,
                       steps_per_epoch=steps_per_epoch, n_epochs=n_epochs, save_path=save_path, config=_CONFIG,
                       use_tb=True, custom_callbacks=callbacks_constructed,
                       fb_method=fb_method,
@@ -101,7 +101,7 @@ def train(save_path,
     else:
         assert test is not None, "please provide test data for evaluation"
         evaluation_loop(model=model, optimizer=optimizer, loss_function=loss_function, metrics=[acc_chexnet_covid],
-                      test=test, meta_data=meta_data,
+                      test=test, meta_data=metadata,
                       save_path=save_path, config=_CONFIG,
                       custom_callbacks=callbacks_constructed,
                       target_indice=target_indice,

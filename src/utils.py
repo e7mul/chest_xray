@@ -206,7 +206,7 @@ def evaluation_multiclasses(test_predictions_single_epoch, data_list_save_file, 
     args: test_predictions_single_epoch, predictions on testset, a numpy array with shape (*, 9) 
     data_list_save_file, '/gpfs/data/luilab/covid/data_list/data_split_20200408.pkl'
     '''
-    from src.data.data_chexnet_covid import flatten_exams_list, get_exams
+    from src.data.data import flatten_exams_list, get_exams
     if label_tabel is None:
         assert data_list_save_file is not None
         _, test_imagelists = pickle.load(open(data_list_save_file, 'rb'))

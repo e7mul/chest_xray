@@ -269,7 +269,7 @@ def flatten_exams_list(exam_list):
     return flattened, indices_dict
 
 
-class PreCovidPickleDataset(Dataset):
+class NYUPickleDataset(Dataset):
     def __init__(self, data_dir, file_data_list, uncertainty_label,
                  data_list_index=0, channels=3, randomly_select_image_from_exam=False, transform=None):
         '''
@@ -418,12 +418,12 @@ def two_unique_values_for_all_labels(labels, multiclass):
         else:
             return False
 
-def load_precovid_pkl_dataset(uncertainty_label,
-                              transform_train,
-                              transform_inference,
-                              data_dir,
-                              combined_pkl_file):
-    train_dataset = PreCovidPickleDataset(
+def load_nyu_pkl_dataset(uncertainty_label,
+                         transform_train,
+                         transform_inference,
+                         data_dir,
+                         combined_pkl_file):
+    train_dataset = NYUPickleDataset(
         data_dir=data_dir,
         file_data_list=combined_pkl_file,
         uncertainty_label=uncertainty_label,
@@ -431,7 +431,7 @@ def load_precovid_pkl_dataset(uncertainty_label,
         randomly_select_image_from_exam=True,
         transform=transform_train
     )
-    val_dataset = PreCovidPickleDataset(
+    val_dataset = NYUPickleDataset(
         data_dir=data_dir,
         file_data_list=combined_pkl_file,
         uncertainty_label=uncertainty_label,
@@ -520,9 +520,9 @@ def load_covid_pkl_dataset(transform_trainval,
     return train_dataset, val_dataset, test_dataset
 
 @gin.configurable
-def get_chexnet_covid(
+def make_data(
         data_dir,
-        precovid=False,
+        is_nyu=False,
         uncertainty_label=1,
         combined_pkl_file=None,
         train_val_image_list_file=None,
@@ -574,8 +574,8 @@ def get_chexnet_covid(
         transforms.Lambda
         (lambda crops: torch.stack([normalize(crop) for crop in crops]))
     ])
-    if precovid:
-        train_dataset, val_dataset, test_dataset = load_precovid_pkl_dataset(
+    if is_nyu:
+        train_dataset, val_dataset, test_dataset = load_nyu_pkl_dataset(
             uncertainty_label=uncertainty_label,
             transform_train=transform_trainval,
             transform_inference=transform_test,
@@ -620,13 +620,13 @@ def get_chexnet_covid(
             )
     
     
-    training_loader = DataLoader(dataset=train_dataset, batch_size=batch_size,
-                             shuffle=True, num_workers=num_workers, pin_memory=True)
-    valid_loader = DataLoader(dataset=val_dataset, batch_size=batch_size,
-                             shuffle=False, num_workers=num_workers, pin_memory=True)
+    training_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers,
+        pin_memory=True)
+    valid_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers,
+        pin_memory=True)
     if test:
-        test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size,
-                                 shuffle=False, num_workers=num_workers, pin_memory=True)
+        test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers,
+            pin_memory=True)
 
     return_tuple = (
         training_loader if train else None, 
