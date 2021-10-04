@@ -25,12 +25,12 @@ training_loop.device_numbers=[0]
 training_loop.checkpoint_monitor='val_auc_chexnet_covid'
 
 # Dataset
-get_chexnet_covid.seed=777 # Use different seed for different instance of CV
-get_chexnet_covid.data_dir="/gpfs/data/luilab/covid/NIH/images"
-get_chexnet_covid.train_image_list_file="data/nih_labels/train_list.txt"
-get_chexnet_covid.val_image_list_file="data/nih_labels/val_list.txt"
-get_chexnet_covid.test_image_list_file="data/nih_labels/test_list.txt"
-get_chexnet_covid.num_workers=10
-get_chexnet_covid.train=True
-get_chexnet_covid.valid=True
-get_chexnet_covid.test=True
+make_data.seed=777 # Use different seed for different instance of CV
+make_data.data_dir="/gpfs/data/luilab/covid/NIH/images"
+make_data.train_image_list_file="data/nih_labels/train_list.txt"
+make_data.val_image_list_file="data/nih_labels/val_list.txt"
+make_data.test_image_list_file="data/nih_labels/test_list.txt"
+make_data.num_workers=10
+make_data.train=True
+make_data.valid=True
+make_data.test=True
