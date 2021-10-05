@@ -1,3 +1,5 @@
 # chest_xray
 
-python bin/experiment.py results_dir configs/nih_txt_loader.gin
+Usage: python bin/experiment.py results_dir configs/config.gin
+
+Results are in results_dir/history.csv
